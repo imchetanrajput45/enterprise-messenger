@@ -12,7 +12,6 @@ services:
     envVars:
       - key: EUREKA_HOSTNAME
         value: service-registry
-    buildCommand: cd service-registry && mvn clean package -DskipTests -pl . -am
     healthCheckPath: /actuator/health
 
   # ─── Config Server ─────────────────────────────────────

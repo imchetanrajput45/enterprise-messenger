@@ -48,18 +48,22 @@ git push -u origin main
    - **Port**: `6379`
    - **Password**: from the dashboard
 
-### 2c. Upstash Kafka (Free)
-1. In Upstash dashboard → Create a new **Kafka** cluster
-2. Create these topics manually:
+### 2c. Aiven.io (Free Kafka)
+1. Go to [aiven.io](https://aiven.io) → Sign up (free, no credit card)
+2. Create a new project → name it `messenger`
+3. Click "Create Service" → Select **Apache Kafka**
+4. Select **Free Plan** → Cloud: **AWS** → Region: **Mumbai** (ap-south-1)
+5. Name your service: `messenger-kafka`
+6. Once it's "Running", go to the **"Topics"** tab and create:
    - `message.sent`
    - `message.delivered`
    - `message.read`
    - `user.registered`
-3. Note down:
-   - **Bootstrap Endpoint**: `xxx.upstash.io:9092`
-   - **Username**: from the dashboard
+7. In **"Overview"** tab, find **"Connection information"**:
+   - **Service URI (Bootstrap Server)**: looks like `messenger-kafka-xxx.aivencloud.com:12345`
+   - **User**: `avnadmin`
    - **Password**: from the dashboard
-   - **SASL JAAS Config**: `org.apache.kafka.common.security.scram.ScramLoginModule required username="YOUR_USERNAME" password="YOUR_PASSWORD";`
+8. **Security Note**: Aiven uses SSL by default. For our Spring Boot apps using SASL_SSL/SCRAM, we need to enable it in Aiven console (Service Settings > Advanced configuration > `kafka.sasl_enabled_mechanisms`: SCRAM-SHA-256).
 
 ---
 
