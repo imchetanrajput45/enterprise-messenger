@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-contacts-table
+      author: enterprise-messenger
+      changes:
+        - createTable:
+            schemaName: user_schema
+            tableName: contacts
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: owner_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: contact_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nickname
+                  type: varchar(100)
+              - column:
+                  name: is_blocked
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_favorite
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            schemaName: user_schema
+            tableName: contacts
+            columnNames: owner_id, contact_id
+            constraintName: uq_contacts_owner_contact
+        - createIndex:
+            schemaName: user_schema
+            tableName: contacts
+            indexName: idx_contacts_owner_id
+            columns:
+              - column:
+                  name: owner_id
+        - createIndex:
+            schemaName: user_schema
+            tableName: contacts
+            indexName: idx_contacts_owner_blocked
+            columns:
+              - column:
+                  name: owner_id
+              - column:
+                  name: is_blocked

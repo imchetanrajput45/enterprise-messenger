@@ -1,0 +1,31 @@
+# ─── API Gateway Configuration ────────────────────────────────
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+
+# ─── JWT Configuration (for token validation at gateway) ─────
+app:
+  jwt:
+    secret: "YTJiM2M0ZDVlNmY3ZzhpOWoxazJsM200bjVvNnA3cThyOXMwdDF1MnYzdzR4NXk2ejdBMkIzQzRENUU2Rjc="
+
+# ─── Redis (rate limiting) ──────────────────────────────────
+  redis:
+    host: localhost
+    port: 6379
+    password: redis_secret

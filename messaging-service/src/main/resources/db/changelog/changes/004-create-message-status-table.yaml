@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-message-status-table
+      author: enterprise-messenger
+      changes:
+        - createTable:
+            schemaName: messaging_schema
+            tableName: message_status
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: message_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  defaultValue: SENT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: delivered_at
+                  type: timestamp
+              - column:
+                  name: read_at
+                  type: timestamp
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableSchemaName: messaging_schema
+            baseTableName: message_status
+            baseColumnNames: message_id
+            referencedTableSchemaName: messaging_schema
+            referencedTableName: messages
+            referencedColumnNames: id
+            constraintName: fk_message_status_message
+            onDelete: CASCADE
+        - addUniqueConstraint:
+            schemaName: messaging_schema
+            tableName: message_status
+            columnNames: message_id, user_id
+            constraintName: uq_message_status_message_user
+        - createIndex:
+            schemaName: messaging_schema
+            tableName: message_status
+            indexName: idx_message_status_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            schemaName: messaging_schema
+            tableName: message_status
+            indexName: idx_message_status_message_id
+            columns:
+              - column:
+                  name: message_id

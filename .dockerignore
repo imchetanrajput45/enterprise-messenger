@@ -1,0 +1,9 @@
+target/
+*.log
+.idea/
+*.iml
+node_modules/
+dist/
+.git/
+docker/
+messenger-ui/

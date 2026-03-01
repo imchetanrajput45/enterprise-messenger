@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-user-roles-table
+      author: enterprise-messenger
+      changes:
+        - createTable:
+            schemaName: auth_schema
+            tableName: user_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            schemaName: auth_schema
+            tableName: user_roles
+            columnNames: user_id, role_id
+            constraintName: pk_user_roles
+        - addForeignKeyConstraint:
+            baseTableSchemaName: auth_schema
+            baseTableName: user_roles
+            baseColumnNames: user_id
+            referencedTableSchemaName: auth_schema
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_roles_user_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableSchemaName: auth_schema
+            baseTableName: user_roles
+            baseColumnNames: role_id
+            referencedTableSchemaName: auth_schema
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_user_roles_role_id
+            onDelete: CASCADE

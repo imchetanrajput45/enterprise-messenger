@@ -1,0 +1,99 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-messages-table
+      author: enterprise-messenger
+      changes:
+        - createTable:
+            schemaName: messaging_schema
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: conversation_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sender_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message_type
+                  type: varchar(20)
+                  defaultValue: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: text
+              - column:
+                  name: media_url
+                  type: varchar(512)
+              - column:
+                  name: media_type
+                  type: varchar(50)
+              - column:
+                  name: reply_to_id
+                  type: uuid
+              - column:
+                  name: edited
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableSchemaName: messaging_schema
+            baseTableName: messages
+            baseColumnNames: conversation_id
+            referencedTableSchemaName: messaging_schema
+            referencedTableName: conversations
+            referencedColumnNames: id
+            constraintName: fk_messages_conversation
+            onDelete: CASCADE
+        - createIndex:
+            schemaName: messaging_schema
+            tableName: messages
+            indexName: idx_messages_conversation_id
+            columns:
+              - column:
+                  name: conversation_id
+        - createIndex:
+            schemaName: messaging_schema
+            tableName: messages
+            indexName: idx_messages_sender_id
+            columns:
+              - column:
+                  name: sender_id
+        - createIndex:
+            schemaName: messaging_schema
+            tableName: messages
+            indexName: idx_messages_created_at
+            columns:
+              - column:
+                  name: created_at
+                  descending: true

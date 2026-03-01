@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-conversation-members-table
+      author: enterprise-messenger
+      changes:
+        - createTable:
+            schemaName: messaging_schema
+            tableName: conversation_members
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: conversation_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(20)
+                  defaultValue: MEMBER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: muted
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableSchemaName: messaging_schema
+            baseTableName: conversation_members
+            baseColumnNames: conversation_id
+            referencedTableSchemaName: messaging_schema
+            referencedTableName: conversations
+            referencedColumnNames: id
+            constraintName: fk_conversation_members_conversation
+            onDelete: CASCADE
+        - addUniqueConstraint:
+            schemaName: messaging_schema
+            tableName: conversation_members
+            columnNames: conversation_id, user_id
+            constraintName: uq_conversation_members_conversation_user
+        - createIndex:
+            schemaName: messaging_schema
+            tableName: conversation_members
+            indexName: idx_conversation_members_user_id
+            columns:
+              - column:
+                  name: user_id

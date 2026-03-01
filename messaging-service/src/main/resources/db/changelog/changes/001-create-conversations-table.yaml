@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-conversations-table
+      author: enterprise-messenger
+      changes:
+        - createTable:
+            schemaName: messaging_schema
+            tableName: conversations
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+              - column:
+                  name: avatar_url
+                  type: varchar(512)
+              - column:
+                  name: created_by
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - createIndex:
+            schemaName: messaging_schema
+            tableName: conversations
+            indexName: idx_conversations_created_by
+            columns:
+              - column:
+                  name: created_by
+        - createIndex:
+            schemaName: messaging_schema
+            tableName: conversations
+            indexName: idx_conversations_updated_at
+            columns:
+              - column:
+                  name: updated_at
+                  descending: true

@@ -1,0 +1,33 @@
+# ─── User Service Configuration ───────────────────────────────
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5433/messenger_db?currentSchema=user_schema
+    username: messenger
+    password: messenger_secret
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: user_schema
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: user_schema
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: user-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.enterprise.messenger.*"
+
+# ─── JWT Configuration (for token validation) ───────────────
+app:
+  jwt:
+    secret: "YTJiM2M0ZDVlNmY3ZzhpOWoxazJsM200bjVvNnA3cThyOXMwdDF1MnYzdzR4NXk2ejdBMkIzQzRENUU2Rjc="
